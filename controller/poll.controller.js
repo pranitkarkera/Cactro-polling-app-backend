@@ -4,6 +4,10 @@ const Poll = require("../models/poll.model");
 exports.createPoll = async (req, res) => {
   try {
     const { question, options } = req.body;
+    // Ensure options is an array and question is a string
+    if (!question || !Array.isArray(options) || options.length === 0) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
     const poll = new Poll({ question, options });
     await poll.save();
     res.status(201).json(poll);
