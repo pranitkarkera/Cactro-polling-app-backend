@@ -44,3 +44,18 @@ exports.resultPoll = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+//get specific poll
+exports.specificPoll = async (req, res) => {
+  try {
+    const poll = await Poll.findById(req.params.id);
+    if (poll) {
+      res.json(poll);
+    } else {
+      res.status(404).json({ message: "Poll not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching poll by ID:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
