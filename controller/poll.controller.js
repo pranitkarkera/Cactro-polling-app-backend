@@ -48,7 +48,14 @@ exports.resultPoll = async (req, res) => {
 //get specific poll
 exports.specificPoll = async (req, res) => {
   try {
-    const poll = await Poll.findById(req.params.id);
+    const { id } = req.params;
+
+    // Check if the ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid poll ID" });
+    }
+
+    const poll = await Poll.findById(id);
     if (poll) {
       res.json(poll);
     } else {
@@ -58,4 +65,4 @@ exports.specificPoll = async (req, res) => {
     console.error("Error fetching poll by ID:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};
