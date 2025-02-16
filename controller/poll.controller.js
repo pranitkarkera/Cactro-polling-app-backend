@@ -4,19 +4,28 @@ const Poll = require("../models/poll.model");
 exports.createPoll = async (req, res) => {
   try {
     const { question, options } = req.body;
-    // Ensure options is an array and question is a string
-    if (!question || !Array.isArray(options) || options.length === 0) {
+    console.log("Received request body:", req.body); // Log the request body
+
+    // Validate input
+    if (
+      !question ||
+      !Array.isArray(options) ||
+      options.length === 0 ||
+      !options.every((opt) => opt.text)
+    ) {
       return res.status(400).json({ message: "Invalid input" });
     }
+
+    // Create and save the poll
     const poll = new Poll({ question, options });
     await poll.save();
+    console.log("Poll created successfully:", poll); // Log the created poll
     res.status(201).json(poll);
   } catch (error) {
     console.error("Error creating poll:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 // Vote on a poll
 exports.votePoll = async (req, res) => {
   try {

@@ -7,7 +7,7 @@ const pollsRoutes = require("./routes/polls.route");
 const app = express();
 
 const corsOptions = {
-  origin: "*",
+  origin: "*", // Allow all origins (you can restrict this in production)
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -21,6 +21,13 @@ app.get("/", (req, res) => {
 
 app.use("/api/polls", pollsRoutes);
 
+// Start the server
+const PORT = process.env.PORT || 3000; // Use the port from environment variables or default to 3000
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+// Initialize the database connection
 initializeDatabase()
   .then(() => {
     console.log("Database connected successfully");
